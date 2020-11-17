@@ -8,7 +8,6 @@ import android.graphics.Canvas;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -27,10 +26,10 @@ public class JoyStick extends View {
 
     private PointF mCenterPoint;
 
+    private JoyStickChangeListener mJoyStickChangeListener = null;
+
     public JoyStick(Context context, AttributeSet attrs) {
         super(context, attrs);
-        // TODO Auto-generated constructor stub
-        // Get bitmap
         mBmpRockerBg = BitmapFactory.decodeResource(context.getResources(), R.drawable.joystick_background);
         mBmpRockerBtn = BitmapFactory.decodeResource(context.getResources(), R.drawable.joystick_knob);
 
@@ -39,7 +38,6 @@ public class JoyStick extends View {
             // When calling this method, you can get the actual width of the view getWidth() and getHeight()
             @Override
             public boolean onPreDraw() {
-                // TODO Auto-generated method stub
                 getViewTreeObserver().removeOnPreDrawListener(this);
 
                 mCenterPoint = new PointF(getWidth() / 2, getHeight() / 2);
@@ -49,9 +47,9 @@ public class JoyStick extends View {
                 mRockerBtn_X = mCenterPoint.x;
                 mRockerBtn_Y = mCenterPoint.y;
 
-                float tmp_f = mBmpRockerBg.getWidth() / (float)(mBmpRockerBg.getWidth() + mBmpRockerBtn.getWidth());
+                float tmp_f = mBmpRockerBg.getWidth() / (float) (mBmpRockerBg.getWidth() + mBmpRockerBtn.getWidth());
                 mRockerBg_R = tmp_f * getWidth() / 2;
-                mRockerBtn_R = (1.0f - tmp_f)* getWidth() / 2;
+                mRockerBtn_R = (1.0f - tmp_f) * getWidth() / 2;
 
                 return true;
             }
@@ -62,16 +60,12 @@ public class JoyStick extends View {
 
             @Override
             public void run() {
-                // TODO Auto-generated method stub
-                while(true){
-
+                while (true) {
                     //The system calls the onDraw method to refresh the screen
                     JoyStick.this.postInvalidate();
-
                     try {
                         Thread.sleep(100);
                     } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
                 }
@@ -82,25 +76,24 @@ public class JoyStick extends View {
     @SuppressLint("DrawAllocation")
     @Override
     protected void onDraw(Canvas canvas) {
-        // TODO Auto-generated method stub
         super.onDraw(canvas);
         canvas.drawBitmap(mBmpRockerBg, null,
-                new Rect((int)(mRockerBg_X - mRockerBg_R),
-                        (int)(mRockerBg_Y - mRockerBg_R),
-                        (int)(mRockerBg_X + mRockerBg_R),
-                        (int)(mRockerBg_Y + mRockerBg_R)),
+                new Rect((int) (mRockerBg_X - mRockerBg_R),
+                        (int) (mRockerBg_Y - mRockerBg_R),
+                        (int) (mRockerBg_X + mRockerBg_R),
+                        (int) (mRockerBg_Y + mRockerBg_R)),
                 null);
         canvas.drawBitmap(mBmpRockerBtn, null,
-                new Rect((int)(mRockerBtn_X - mRockerBtn_R),
-                        (int)(mRockerBtn_Y - mRockerBtn_R),
-                        (int)(mRockerBtn_X + mRockerBtn_R),
-                        (int)(mRockerBtn_Y + mRockerBtn_R)),
+                new Rect((int) (mRockerBtn_X - mRockerBtn_R),
+                        (int) (mRockerBtn_Y - mRockerBtn_R),
+                        (int) (mRockerBtn_X + mRockerBtn_R),
+                        (int) (mRockerBtn_Y + mRockerBtn_R)),
                 null);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        // TODO Auto-generated method stub
         if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
             // When the touch screen area is not within the active range
             if (Math.sqrt(Math.pow((mRockerBg_X - (int) event.getX()), 2) + Math.pow((mRockerBg_Y - (int) event.getY()), 2)) >= mRockerBg_R) {
@@ -112,15 +105,15 @@ public class JoyStick extends View {
                 mRockerBtn_X = (int) event.getX();
                 mRockerBtn_Y = (int) event.getY();
             }
-            if(mJoyStickChangeListener != null) {
-                mJoyStickChangeListener.report(mRockerBtn_X - mCenterPoint.x, mRockerBtn_Y - mCenterPoint.y);
+            if (mJoyStickChangeListener != null) {
+                mJoyStickChangeListener.changingPosition(mRockerBtn_X - mCenterPoint.x, mCenterPoint.y - mRockerBtn_Y);
             }
         } else if (event.getAction() == MotionEvent.ACTION_UP) {
             //When the button is released, the joystick must be restored to its initial position
             mRockerBtn_X = mCenterPoint.x;
             mRockerBtn_Y = mCenterPoint.y;
-            if(mJoyStickChangeListener != null) {
-                mJoyStickChangeListener.report(0, 0);
+            if (mJoyStickChangeListener != null) {
+                mJoyStickChangeListener.changingPosition(0, 0);
             }
         }
         return true;
@@ -129,7 +122,7 @@ public class JoyStick extends View {
     /***
      Get the arc between two points
      */
-    public double getRad(float px1, float py1, float px2, float py2) {
+    private double getRad(float px1, float py1, float px2, float py2) {
         //Get the distance between two points X
         float x = px2 - px1;
         //Get the distance between two points Y
@@ -148,11 +141,10 @@ public class JoyStick extends View {
     }
 
     /**
-     *
-     *@Param R Rotation point of circular motion
-     @Param centerX Rotation point X
-     @Param centerY Rotation point Y
-     Radians of rotation* @param rad
+     * @Param R Rotation point of circular motion
+     * @Param centerX Rotation point X
+     * @Param centerY Rotation point Y
+     * Radians of rotation* @param rad
      */
     public void getXY(float centerX, float centerY, float R, double rad) {
         //Get the X coordinate of the circular motion
@@ -161,11 +153,9 @@ public class JoyStick extends View {
         mRockerBtn_Y = (float) (R * Math.sin(rad)) + centerY;
     }
 
-    JoyStickChangeListener mJoyStickChangeListener = null;
-    public void setJoyStickChangeListener(JoyStickChangeListener rockerChangeListener) {
-        mJoyStickChangeListener = rockerChangeListener;
+
+    public void setJoyStickChangeListener(JoyStickChangeListener changeListener) {
+        mJoyStickChangeListener = changeListener;
     }
-    public interface JoyStickChangeListener {
-        void report(float x, float y);
-    }
+
 }
