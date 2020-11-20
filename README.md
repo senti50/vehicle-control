@@ -3,4 +3,4 @@
 
 ## Demo
 
-![Farmers Market Finder Demo](demo/joystick.gif)
+![Demo](demo/map.gif)
