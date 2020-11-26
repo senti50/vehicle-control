@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
     tools:context=".MainActivity">
+
     <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/map"
-        tools:context=".MapsActivity"
-        android:name="com.google.android.gms.maps.SupportMapFragment" />
+        tools:context=".MapsActivity" />
 
     <com.example.vehiclecontrol.JoyStick
-        android:id="@+id/rockerView1"
+        android:id="@+id/joyStickLeftView"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_alignParentStart="true"
@@ -23,7 +25,7 @@
         android:layout_marginBottom="16dp" />
 
     <com.example.vehiclecontrol.JoyStick
-        android:id="@+id/rockerView2"
+        android:id="@+id/joyStickRightView"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_alignParentEnd="true"
@@ -34,8 +36,8 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@id/joyStickLeftView"
+        android:layout_alignParentBottom="true"
         android:layout_margin="16dp"
         android:orientation="vertical">
 
@@ -59,8 +61,8 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
+        android:layout_toStartOf="@id/joyStickRightView"
+        android:layout_alignParentBottom="true"
         android:layout_margin="16dp"
         android:orientation="vertical">
 
@@ -81,6 +83,19 @@
             android:textSize="20sp" />
 
     </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="#EB655E5E"
+        android:onClick="showMenu"
+        android:src="@drawable/ic_baseline_menu_24" />
 
 
 </RelativeLayout>
