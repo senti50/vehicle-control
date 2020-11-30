@@ -3,4 +3,11 @@
 
 ## Demo
 
-![Demo](demo/map.gif)
+#### Map capabilities
+>add,delete,drag marker and draw line between markers
+
+![DemoMap](demo/map.gif)
+
+#### Change of views
+
+![Demograg](demo/changefrag.gif)
