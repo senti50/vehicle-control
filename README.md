@@ -8,6 +8,6 @@
 
 ![DemoMap](demo/map.gif)
 
-#### Cube which change position when device is rotate
+#### Cube which changes position when device rotates
 
 ![Demograg](demo/rotateDevice.gif)
