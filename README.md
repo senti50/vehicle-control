@@ -8,6 +8,6 @@
 
 ![DemoMap](demo/map.gif)
 
-#### Change of views
+#### Cube which change position when device is rotate
 
-![Demograg](demo/changefrag.gif)
+![Demograg](demo/rotateDevice.gif)
