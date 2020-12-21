@@ -6,6 +6,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.vehiclecontrol.fragments.MapsFragment;
+import com.example.vehiclecontrol.fragments.PositionVisualizationFragment;
+import com.example.vehiclecontrol.fragments.VideoFragment;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -69,6 +73,7 @@ public class MainActivity extends FragmentActivity {
                                 .add(R.id.corner_fragment_container, positionVisualizationFragment)
                                 .add(R.id.main_fragment_container, videoFragment)
                                 .commit();
+                        isPositionVisualizationFragment = true;
                     }
                     isMapFragment = false;
                     changeFragmentButton.setText("Map");
@@ -96,10 +101,9 @@ public class MainActivity extends FragmentActivity {
         });
 
 
-        findViewById(R.id.corner_fragment_container).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.corner_fragment_container).setOnClickListener((new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (isMapFragment) {
                     // MapsFragment is in main_fragment_container
                     if (!isPositionVisualizationFragment) {
@@ -123,10 +127,8 @@ public class MainActivity extends FragmentActivity {
 
 
                 }
-
-
             }
-        });
+        }));
 
     }
 
